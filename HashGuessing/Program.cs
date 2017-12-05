@@ -6,60 +6,23 @@ using System.Text;
 
 namespace HashGuessing
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+
+		public static void Main(string[] args)
 		{
-			if (args.Length != 2)
-			{
-				Console.WriteLine("usage: HashGuessing [filename with hash components] [filename with hash to match]");
-				Console.ReadKey();
-				return;
-			}
 
-			var fileComponents = new FileInfo(args[0]);
-			var fileHash = new FileInfo(args[1]);
+			var myApp = new Program();
+			var components = myApp.Initialize(args);
 
-			if (!fileComponents.Exists || !fileHash.Exists)
-			{
-				Console.WriteLine("Unable to find one of the input files!");
-				Console.ReadKey();
-				return;
-			}
-
-			var streamReader = new StreamReader(fileComponents.Name);
-
-			var components = new List<string>();
-			while (!streamReader.EndOfStream)
-			{
-				components.Add(streamReader.ReadLine());
-			}
-
-			string hashToFind;
-			streamReader = new StreamReader(fileHash.Name);
-			hashToFind = streamReader.ReadToEnd();
-
-			Console.WriteLine("Starting program with these components: ");
-			foreach (string s in components)
-			{
-				Console.WriteLine(s);
-			}
-
-			Console.WriteLine("Looking for this hash: ");
-			Console.WriteLine(hashToFind);
 
 			Console.WriteLine("Go for a walk, this may take a while.");
 
 			var hasher = SHA256.Create();
 
-			var fullString = new StringBuilder();
-			foreach (var line in components)
-			{
-				fullString.Append(line);
-			}
-
+			var fullString = components.GetAllValues();
 			Console.WriteLine($"Computing hash for string: [{fullString}]");
-			var hashedBytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(fullString.ToString()));
+			var hashedBytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(fullString));
 			var stringBuilder = new StringBuilder();
 			foreach (var hexByte in hashedBytes)
 			{
@@ -69,6 +32,46 @@ namespace HashGuessing
 
 			Console.WriteLine("End of program");
 			Console.ReadKey();
+		}
+
+		public Components Initialize(string[] args)
+		{
+			var components = new Components();
+
+			if (args.Length != 2)
+			{
+				Console.WriteLine("usage: HashGuessing [filename with hash components] [filename with hash to match]");
+				Console.ReadKey();
+				return null;
+			}
+
+			var fileComponents = new FileInfo(args[0]);
+			var fileHash = new FileInfo(args[1]);
+
+			if (!fileComponents.Exists || !fileHash.Exists)
+			{
+				Console.WriteLine("Unable to find one of the input files!");
+				Console.ReadKey();
+				return null;
+			}
+
+			var streamReader = new StreamReader(fileComponents.Name);
+
+			while (!streamReader.EndOfStream)
+			{
+				components.Values.Add(streamReader.ReadLine());
+			}
+
+			streamReader = new StreamReader(fileHash.Name);
+			components.HashToFind = streamReader.ReadToEnd();
+
+			Console.WriteLine("Starting program with these components: ");
+			Console.WriteLine(components.GetAllValues());
+
+			Console.WriteLine("Looking for this hash: ");
+			Console.WriteLine(components.HashToFind);
+
+			return components;
 		}
 	}
 }
