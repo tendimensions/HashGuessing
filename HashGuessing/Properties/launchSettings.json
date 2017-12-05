@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HashGuessing": {
+      "commandName": "Project",
+      "commandLineArgs": "components.txt hash.txt"
+    }
+  }
+}
