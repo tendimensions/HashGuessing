@@ -13,13 +13,7 @@ namespace HashGuessing
 			var hasher = MD5.Create();
 			var computedHash = hasher.ComputeHash(Encoding.UTF8.GetBytes(toHash));
 
-			var result = new StringBuilder();
-			foreach (var b in computedHash)
-			{
-				result.Append(b.ToString("x2"));
-			}
-
-			return result.ToString();
+			return ConvertHashToString(computedHash);
 		}
 
 		public static string Sha256Hash(string toHash)
@@ -27,14 +21,7 @@ namespace HashGuessing
 			var hasher = SHA256.Create();
 			var computedHash = hasher.ComputeHash(Encoding.UTF8.GetBytes(toHash));
 
-			var result = new StringBuilder();
-			foreach (var b in computedHash)
-			{
-				result.Append(b.ToString("x2"));
-			}
-
-			return result.ToString();
-
+			return ConvertHashToString(computedHash);
 		}
 
 		public static string Sha1Hash(string toHash)
@@ -42,13 +29,7 @@ namespace HashGuessing
 			var hasher = SHA1.Create();
 			var computedHash = hasher.ComputeHash(Encoding.UTF8.GetBytes(toHash));
 
-			var result = new StringBuilder();
-			foreach (var b in computedHash)
-			{
-				result.Append(b.ToString("x2"));
-			}
-
-			return result.ToString();
+			return ConvertHashToString(computedHash);
 
 		}
 
@@ -57,6 +38,12 @@ namespace HashGuessing
 			var hasher = SHA512.Create();
 			var computedHash = hasher.ComputeHash(Encoding.UTF8.GetBytes(toHash));
 
+			return ConvertHashToString(computedHash);
+
+		}
+
+		private static string ConvertHashToString(IEnumerable<byte> computedHash)
+		{
 			var result = new StringBuilder();
 			foreach (var b in computedHash)
 			{
@@ -64,9 +51,6 @@ namespace HashGuessing
 			}
 
 			return result.ToString();
-
 		}
-
-
 	}
 }

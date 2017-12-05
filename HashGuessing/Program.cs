@@ -16,19 +16,19 @@ namespace HashGuessing
 			var components = myApp.Initialize(args);
 
 
-			Console.WriteLine("Go for a walk, this may take a while.");
+			Console.WriteLine($"Here we go... we're working on {components.PermutationsCount} different strings.");
 
-			var hasher = SHA256.Create();
 
-			var fullString = components.GetAllValues();
-			Console.WriteLine($"Computing hash for string: [{fullString}]");
-			var hashedBytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(fullString));
-			var stringBuilder = new StringBuilder();
-			foreach (var hexByte in hashedBytes)
+			var matchingString = components.FindHash();
+
+			if (string.IsNullOrEmpty(matchingString.Item1) || string.IsNullOrEmpty(matchingString.Item2))
 			{
-				stringBuilder.Append(hexByte.ToString("x2"));
+				Console.WriteLine("Not found!");
 			}
-			Console.WriteLine(stringBuilder);
+			else
+			{
+				Console.WriteLine($"Holy shit, we found a match! String: {matchingString.Item1} produced our hash using {matchingString.Item2}");
+			}
 
 			Console.WriteLine("End of program");
 			Console.ReadKey();
@@ -66,10 +66,17 @@ namespace HashGuessing
 			components.HashToFind = streamReader.ReadToEnd();
 
 			Console.WriteLine("Starting program with these components: ");
-			Console.WriteLine(components.GetAllValues());
+			foreach (var s in components.Values)
+			{
+				Console.WriteLine(s);
+			}
 
+			Console.WriteLine();
 			Console.WriteLine("Looking for this hash: ");
 			Console.WriteLine(components.HashToFind);
+
+			Console.WriteLine();
+			components.Initialize();
 
 			return components;
 		}
