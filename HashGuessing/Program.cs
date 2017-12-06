@@ -15,6 +15,7 @@ namespace HashGuessing
 			var myApp = new Program();
 			var components = myApp.Initialize(args);
 
+			if (components == null) return;
 
 			Console.WriteLine($"Here we go... we're working on {components.PermutationsCount} different strings.");
 
